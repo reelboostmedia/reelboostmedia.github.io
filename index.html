@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="description" content="Reel Boost Media — AI-powered promo videos for local businesses. AI-POWERED. HUMAN-DIRECTED. Local Promotions for Local Businesses." />
+<link rel="icon" href="data:," />
+<title>Reel Boost Media — AI-Powered. Human-Directed.</title>
+<style>
+  :root{
+    --bg:#04070a;
+    --bg2:#060d08;
+    --panel:#0a140d;
+    --panel2:#0d1a10;
+    --line:rgba(1,169,56,.28);
+    --line-soft:rgba(255,255,255,.08);
+    --emerald:#01A938;
+    --emerald-hi:#2fe673;
+    --emerald-deep:#015c21;
+    --gold:#E4AB2C;
+    --gold-hi:#ffd968;
+    --ink:#f5f8f5;
+    --muted:#a7bcae;
+    --muted2:#7e937f;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+    --sans:"Avenir Next","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+    --rad:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:#131313}
+  a{color:var(--gold-hi)}
+  img,svg{display:block;max-width:100%}
+
+  /* ---------- background layers ---------- */
+  #net{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  .bg-glow{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(900px 520px at 85% -5%, rgba(228,171,44,.10), transparent 60%),
+      radial-gradient(1000px 700px at 10% 15%, rgba(1,169,56,.14), transparent 60%),
+      radial-gradient(1200px 800px at 50% 115%, rgba(1,169,56,.10), transparent 60%),
+      linear-gradient(180deg,#04070a 0%, #050b07 55%, #04070a 100%);
+  }
+  .bg-grid{
+    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35;
+    background-image:
+      linear-gradient(rgba(1,169,56,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(1,169,56,.05) 1px, transparent 1px);
+    background-size:72px 72px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 75%);
+            mask-image:radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+  .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgba(0,0,0,.55) 100%)}
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+    background:linear-gradient(90deg,var(--emerald),var(--gold));
+    box-shadow:0 0 12px rgba(228,171,44,.7)}
+
+  .wrap{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+
+  /* ---------- top bar ---------- */
+  header.bar{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    background:rgba(4,8,6,.72);border-bottom:1px solid var(--line-soft);
+  }
+  .bar-in{max-width:1240px;margin:0 auto;padding:10px clamp(18px,4vw,44px);
+    display:flex;align-items:center;gap:16px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+  .brand svg{width:34px;height:34px;flex:none}
+  .brand b{font-weight:800;letter-spacing:.04em;font-size:15px;line-height:1.1;display:block}
+  .brand span{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--gold);display:block}
+  nav.main{margin-left:auto;display:flex;gap:26px;align-items:center}
+  nav.main a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;letter-spacing:.02em}
+  nav.main a:hover{color:var(--ink)}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;text-decoration:none;cursor:pointer;
+    font-weight:800;letter-spacing:.03em;border-radius:999px;border:1px solid transparent;
+    padding:13px 26px;font-size:15px;transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
+  }
+  .btn-gold{background:linear-gradient(135deg,var(--gold-hi),var(--gold) 55%,#c78f14);color:#191203;
+    box-shadow:0 6px 28px rgba(228,171,44,.35), inset 0 1px 0 rgba(255,255,255,.5)}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(228,171,44,.5), inset 0 1px 0 rgba(255,255,255,.5)}
+  .btn-ghost{background:rgba(1,169,56,.08);color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{background:rgba(1,169,56,.18);transform:translateY(-2px)}
+  .btn-sm{padding:9px 18px;font-size:13.5px}
+  @media (max-width:760px){ nav.main a:not(.btn){display:none} }
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:158px 0 40px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:clamp(24px,5vw,64px);align-items:center}
+  @media (max-width:920px){ .hero-grid{grid-template-columns:1fr} .hero{padding-top:128px} }
+  .hero-tag{
+    display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);
+    font-size:12px;letter-spacing:.24em;color:var(--emerald-hi);
+    border:1px solid var(--line);border-radius:999px;padding:8px 16px;background:rgba(1,169,56,.07);
+  }
+  .hero-tag i{width:8px;height:8px;border-radius:50%;background:var(--emerald-hi);
+    box-shadow:0 0 10px var(--emerald-hi);animation:pulse 2.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  h1.mega{
+    margin:22px 0 0;font-weight:900;line-height:.94;letter-spacing:-.015em;
+    font-size:clamp(52px,9.2vw,124px);text-transform:uppercase;
+  }
+  h1.mega .l1{display:block;color:var(--ink);text-shadow:0 0 44px rgba(1,169,56,.35)}
+  h1.mega .l2{display:block;
+    background:linear-gradient(92deg,var(--gold-hi) 0%,var(--gold) 45%,#b97e10 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 26px rgba(228,171,44,.28))}
+  .hero-sub{margin:26px 0 0;font-size:clamp(19px,2.4vw,25px);font-weight:700;color:var(--ink)}
+  .hero-sub em{font-style:normal;color:var(--gold-hi)}
+  .hero-copy{margin:14px 0 0;color:var(--muted);max-width:56ch;font-size:clamp(16px,1.6vw,18px)}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+  .hero-meta{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 26px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--muted2)}
+  .hero-meta b{color:var(--emerald-hi);font-weight:600}
+
+  /* hero mark */
+  .mark-stage{position:relative;display:grid;place-items:center;min-height:340px}
+  .mark-halo{position:absolute;width:min(30vw,400px);aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle, rgba(1,169,56,.30) 0%, rgba(1,169,56,.08) 45%, transparent 68%);
+    animation:halo 5s ease-in-out infinite}
+  @keyframes halo{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.1);opacity:1}}
+  .mark-orbit{position:absolute;width:min(34vw,450px);aspect-ratio:1;border-radius:50%;
+    border:1px dashed rgba(228,171,44,.35);animation:spin 46s linear infinite}
+  .mark-orbit::after{content:"";position:absolute;top:-5px;left:50%;width:9px;height:9px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 14px var(--gold)}
+  .mark-orbit.o2{width:min(40vw,530px);border-color:rgba(1,169,56,.25);animation-duration:70s;animation-direction:reverse}
+  .mark-orbit.o2::after{background:var(--emerald-hi);box-shadow:0 0 14px var(--emerald-hi);top:auto;bottom:-5px}
+  svg.mark{width:min(58vw,380px);height:auto;position:relative;z-index:2;
+    filter:drop-shadow(0 18px 44px rgba(0,0,0,.65)) drop-shadow(0 0 34px rgba(1,169,56,.35))}
+  .reel-rot{transform-origin:100px 100px;animation:spin 26s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .arrow-float{animation:arrowfloat 3.4s ease-in-out infinite}
+  @keyframes arrowfloat{0%,100%{transform:translate(0,0)}50%{transform:translate(5px,-7px)}}
+  .mark-shadow{width:55%;height:26px;margin-top:6px;border-radius:50%;
+    background:radial-gradient(ellipse, rgba(0,0,0,.65), transparent 70%)}
+  .scroll-cue{display:flex;align-items:center;gap:12px;margin-top:56px;color:var(--muted2);
+    font-family:var(--mono);font-size:11px;letter-spacing:.3em}
+  .scroll-cue .track{width:64px;height:1px;background:var(--line-soft);position:relative;overflow:hidden}
+  .scroll-cue .track::after{content:"";position:absolute;inset:0;width:24px;background:var(--gold);
+    animation:cue 1.8s ease-in-out infinite}
+  @keyframes cue{0%{transform:translateX(-26px)}100%{transform:translateX(70px)}}
+
+  /* ---------- film strip marquee ---------- */
+  .filmwrap{overflow:hidden;padding:22px 0 26px;margin-top:40px}
+  .filmstrip{
+    position:relative;z-index:2;width:104%;margin-left:-2%;background:#020a05;
+    border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);
+    box-shadow:0 0 44px rgba(0,0,0,.6), inset 0 0 60px rgba(1,169,56,.10);
+    overflow:hidden;transform:rotate(-1.1deg) scale(1.02);
+  }
+  .filmstrip .holes{height:20px;
+    background-image:radial-gradient(circle 5px at 14px 50%, rgba(1,169,56,.85) 4.5px, transparent 5.5px);
+    background-size:34px 20px;background-repeat:repeat-x}
+  .marquee{overflow:hidden;padding:12px 0}
+  .marquee-track{display:flex;width:max-content;animation:marq 30s linear infinite}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  .marquee-track span{
+    font-weight:900;letter-spacing:.14em;font-size:clamp(17px,2.4vw,26px);text-transform:uppercase;
+    color:var(--ink);white-space:nowrap;padding-right:.6em}
+  .marquee-track span b{color:var(--gold);font-weight:900}
+  .marquee-track span i{font-style:normal;color:var(--emerald-hi)}
+  @keyframes marq{to{transform:translateX(-50%)}}
+
+  /* ---------- sections ---------- */
+  section.blk{padding:clamp(72px,10vw,120px) 0 8px}
+  .sec-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+  .sec-idx{font-family:var(--mono);color:var(--gold);font-size:14px;letter-spacing:.2em}
+  h2.sec{margin:0;font-size:clamp(32px,5vw,56px);font-weight:900;line-height:1.04;
+    letter-spacing:-.01em;text-transform:uppercase}
+  h2.sec .g{color:var(--emerald-hi)}
+  .sec-lede{color:var(--muted);max-width:64ch;font-size:clamp(16px,1.7vw,19px);margin:10px 0 0}
+
+  /* services — editorial rows */
+  .svc{margin-top:44px;border-top:1px solid var(--line-soft)}
+  .svc-row{
+    display:grid;grid-template-columns:84px 1fr 1.1fr;gap:clamp(14px,3vw,36px);
+    padding:30px 10px;border-bottom:1px solid var(--line-soft);align-items:baseline;
+    transition:background .3s ease,padding-left .3s ease;position:relative;
+  }
+  .svc-row:hover{background:linear-gradient(90deg, rgba(1,169,56,.10), transparent 70%);padding-left:22px}
+  .svc-row .no{font-family:var(--mono);color:var(--gold);font-size:15px}
+  .svc-row h3{margin:0;font-size:clamp(21px,2.6vw,29px);font-weight:800;line-height:1.15}
+  .svc-row p{margin:0;color:var(--muted);font-size:16px}
+  @media (max-width:760px){ .svc-row{grid-template-columns:52px 1fr} .svc-row p{grid-column:2} }
+
+  /* journey */
+  .journey{margin-top:52px;position:relative}
+  .j-line{position:absolute;left:0;right:0;top:34px;height:3px;background:rgba(255,255,255,.08);border-radius:3px}
+  .j-fill{height:100%;width:0;border-radius:3px;
+    background:linear-gradient(90deg,var(--emerald),var(--gold));
+    box-shadow:0 0 16px rgba(228,171,44,.55);transition:width 1.8s cubic-bezier(.22,.8,.24,1)}
+  .journey.on .j-fill{width:100%}
+  .j-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;position:relative}
+  .j-step{padding-top:0}
+  .j-dot{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;position:relative;z-index:2;
+    background:var(--panel);border:2px solid var(--line);font-family:var(--mono);font-weight:700;
+    color:var(--emerald-hi);font-size:17px;transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease}
+  .j-step:hover .j-dot{transform:scale(1.1) rotate(-6deg);border-color:var(--gold);
+    box-shadow:0 0 30px rgba(228,171,44,.45);color:var(--gold-hi)}
+  .j-step h3{margin:20px 0 6px;font-size:20px;font-weight:800}
+  .j-step .freq{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
+  .j-step p{margin:8px 0 0;color:var(--muted);font-size:15.5px}
+  @media (max-width:860px){
+    .j-steps{grid-template-columns:1fr;gap:30px}
+    .j-line{left:34px;right:auto;top:0;bottom:0;width:3px;height:auto}
+    .j-fill{width:100%!important;height:0;transition:height 1.8s cubic-bezier(.22,.8,.24,1)}
+    .journey.on .j-fill{height:100%}
+    .j-step{display:grid;grid-template-columns:70px 1fr;gap:18px}
+    .j-step h3{margin-top:2px}
+  }
+
+  /* pricing */
+  .price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px;align-items:stretch}
+  @media (max-width:1080px){ .price-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:560px){ .price-grid{grid-template-columns:1fr} }
+  .plan{
+    position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));
+    border:1px solid var(--line-soft);border-radius:var(--rad);padding:28px 24px 26px;
+    cursor:pointer;display:flex;flex-direction:column;gap:0;
+    transition:transform .35s cubic-bezier(.22,.8,.24,1), border-color .3s ease, box-shadow .35s ease;
+  }
+  .plan:hover{transform:translateY(-8px);border-color:var(--line);
+    box-shadow:0 22px 48px rgba(0,0,0,.55), 0 0 0 1px rgba(1,169,56,.15), 0 0 34px rgba(1,169,56,.14)}
+  .plan:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .plan.pop{border-color:rgba(228,171,44,.65);
+    background:linear-gradient(180deg,#16240f,#0c150b);
+    box-shadow:0 18px 50px rgba(0,0,0,.6), 0 0 44px rgba(228,171,44,.16)}
+  .plan.pop:hover{box-shadow:0 26px 60px rgba(0,0,0,.65), 0 0 60px rgba(228,171,44,.28)}
+  .plan.sel{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold), 0 22px 54px rgba(0,0,0,.6), 0 0 54px rgba(228,171,44,.25)}
+  .plan .flag{
+    position:absolute;top:-13px;left:50%;transform:translateX(-50%);white-space:nowrap;
+    background:linear-gradient(135deg,var(--gold-hi),var(--gold));color:#191203;
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;
+    padding:6px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(228,171,44,.45)}
+  .plan .pname{font-family:var(--mono);font-size:12.5px;letter-spacing:.2em;color:var(--emerald-hi);text-transform:uppercase}
+  .plan.pop .pname{color:var(--gold-hi)}
+  .plan .amt{display:flex;align-items:baseline;gap:6px;margin-top:12px}
+  .plan .amt b{font-size:47px;font-weight:900;letter-spacing:-.02em;line-height:1}
+  .plan .amt span{color:var(--muted);font-size:14.5px;font-weight:600}
+  .plan .pdesc{color:var(--muted);font-size:15px;margin:12px 0 0;min-height:72px}
+  .plan ul{list-style:none;margin:16px 0 22px;padding:16px 0 0;border-top:1px solid var(--line-soft);
+    display:grid;gap:9px;font-size:14.5px;color:#cfdccf}
+  .plan li{display:flex;gap:10px;align-items:flex-start}
+  .plan li::before{content:"";flex:none;width:7px;height:7px;margin-top:8px;border-radius:2px;
+    background:var(--emerald);transform:rotate(45deg);box-shadow:0 0 8px rgba(1,169,56,.7)}
+  .plan.pop li::before{background:var(--gold);box-shadow:0 0 8px rgba(228,171,44,.7)}
+  .plan .pick{margin-top:auto;font-family:var(--mono);font-size:12px;letter-spacing:.18em;
+    color:var(--muted2);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .plan .pick::after{content:"";width:8px;height:8px;border-radius:50%;border:2px solid var(--muted2)}
+  .plan.sel .pick{color:var(--gold-hi)}
+  .plan.sel .pick::after{background:var(--gold);border-color:var(--gold);box-shadow:0 0 10px var(--gold)}
+  .price-cta{margin-top:34px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;
+    background:rgba(1,169,56,.06);border:1px solid var(--line);border-radius:var(--rad);padding:20px 24px}
+  .price-cta p{margin:0;font-size:16.5px}
+  .price-cta p b{color:var(--gold-hi)}
+  .price-note{color:var(--muted2);font-size:13.5px;margin-top:14px;font-family:var(--mono);letter-spacing:.04em}
+
+  /* town boost */
+  .town{
+    margin-top:48px;border-radius:26px;overflow:hidden;position:relative;
+    border:1px solid var(--line);
+    background:
+      radial-gradient(700px 380px at 88% 0%, rgba(228,171,44,.14), transparent 60%),
+      radial-gradient(800px 500px at 0% 110%, rgba(1,169,56,.22), transparent 60%),
+      linear-gradient(160deg,#0b2013,#06130b 65%);
+    padding:clamp(30px,5vw,56px);
+  }
+  .town h3{margin:0;font-size:clamp(28px,4.4vw,46px);font-weight:900;line-height:1.05;text-transform:uppercase}
+  .town h3 .g{color:var(--gold-hi)}
+  .town p{color:#cfe0d2;max-width:62ch;font-size:clamp(16px,1.8vw,18.5px)}
+  .town-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+  @media (max-width:700px){ .town-cards{grid-template-columns:1fr} }
+  .town-card{background:rgba(3,10,6,.55);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:20px 22px}
+  .town-card .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+  .town-card h4{margin:8px 0 6px;font-size:19px;font-weight:800}
+  .town-card p{margin:0;font-size:15px;color:var(--muted)}
+
+  /* FAQ */
+  .faq{margin-top:40px;border-top:1px solid var(--line-soft)}
+  .faq-item{border-bottom:1px solid var(--line-soft)}
+  .faq-q{
+    width:100%;background:none;border:0;color:var(--ink);cursor:pointer;text-align:left;
+    display:flex;justify-content:space-between;align-items:center;gap:18px;
+    padding:24px 6px;font-size:clamp(17px,2vw,20px);font-weight:700;font-family:var(--sans)}
+  .faq-q:hover{color:var(--gold-hi)}
+  .faq-q .x{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--emerald-hi);font-size:19px;font-weight:400;
+    transition:transform .35s ease, background .3s ease}
+  .faq-item.open .faq-q .x{transform:rotate(45deg);background:rgba(228,171,44,.15);color:var(--gold-hi)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,.8,.24,1)}
+  .faq-a div{padding:0 6px 26px;color:var(--muted);max-width:70ch}
+
+  /* contact / footer */
+  .finale{padding:clamp(80px,11vw,130px) 0 30px;text-align:center;position:relative}
+  .finale .mark-mini{width:92px;margin:0 auto 8px}
+  .finale h2{margin:10px 0 0;font-size:clamp(38px,7vw,84px);font-weight:900;line-height:.98;
+    text-transform:uppercase;letter-spacing:-.01em}
+  .finale h2 .g{background:linear-gradient(92deg,var(--gold-hi),var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .finale p{color:var(--muted);max-width:56ch;margin:20px auto 0;font-size:clamp(16px,1.8vw,19px)}
+  .finale .hero-cta{justify-content:center}
+  footer{border-top:1px solid var(--line-soft);margin-top:70px;padding:26px 0 40px;
+    display:flex;flex-wrap:wrap;gap:12px 30px;align-items:center;justify-content:space-between;
+    font-size:13.5px;color:var(--muted2)}
+  footer .f-brand{display:flex;align-items:center;gap:9px;color:var(--muted)}
+  footer .f-brand svg{width:22px;height:22px}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--gold-hi)}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(34px);transition:opacity .8s ease, transform .8s cubic-bezier(.22,.8,.24,1)}
+  .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
+  .rv.in{opacity:1;transform:none}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+    .rv{opacity:1;transform:none}
+    .j-fill{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="net" aria-hidden="true"></canvas>
+<div class="bg-glow" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div id="progress" aria-hidden="true"></div>
+
+<!-- reusable logo mark -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="rbm-mark">
+      <g class="reel-rot">
+        <circle cx="100" cy="100" r="72" fill="none" stroke="#01A938" stroke-width="30"/>
+        <g fill="#eafff0">
+          <circle cx="100" cy="28" r="6.5"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(30 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(60 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(90 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(120 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(150 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(180 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(210 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(240 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(270 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(300 100 100)"/>
+          <circle cx="100" cy="28" r="6.5" transform="rotate(330 100 100)"/>
+        </g>
+      </g>
+      <g class="arrow-float">
+        <line x1="66" y1="140" x2="140" y2="58" stroke="#E4AB2C" stroke-width="17" stroke-linecap="round"/>
+        <polygon points="163,35 156,74 124,42" fill="#E4AB2C"/>
+        <polygon points="45,161 82,156 50,124" fill="#E4AB2C"/>
+      </g>
+    </g>
+  </defs>
+</svg>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="#top" aria-label="Reel Boost Media — home">
+      <svg viewBox="0 0 200 200" aria-hidden="true"><use href="#rbm-mark"/></svg>
+      <span>
+        <b>REEL BOOST MEDIA</b>
+        <span>AI-POWERED · HUMAN-DIRECTED</span>
+      </span>
+    </a>
+    <nav class="main" aria-label="Main">
+      <a href="#services">Services</a>
+      <a href="#cycle">The Cycle</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-gold btn-sm" href="mailto:getreelboostmedia@gmail.com?subject=Reel%20Boost%20Media%20—%20Pilot%20%24149">Start a Pilot</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div id="heroCopy">
+          <span class="hero-tag"><i></i> PROMO VIDEO STUDIO</span>
+          <h1 class="mega">
+            <span class="l1">AI-Powered.</span>
+            <span class="l2">Human-Directed.</span>
+          </h1>
+          <p class="hero-sub">Local Promotions for <em>Local Businesses.</em></p>
+          <p class="hero-copy">
+            Reel Boost Media produces scroll-stopping promo videos for shops, restaurants,
+            services, and attractions — built with
+            leading-edge AI production and directed by a human who knows how local customers buy.
+            Every campaign is matched to <strong style="color:var(--ink)">your sales cycle</strong>:
+            weekly, monthly, and seasonal — so your promotion lands exactly when your customers are ready.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-gold" href="mailto:getreelboostmedia@gmail.com?subject=Reel%20Boost%20Media%20—%20Pilot%20%24149">Start with a $149 Pilot</a>
+            <a class="btn btn-ghost" href="#pricing">See the plans ↓</a>
+          </div>
+          <div class="hero-meta">
+            <span><b>MODEL</b> CYCLE-BASED CAMPAIGNS</span>
+          </div>
+        </div>
+        <div class="mark-stage" id="markStage" aria-hidden="true">
+          <div class="mark-halo"></div>
+          <div class="mark-orbit"></div>
+          <div class="mark-orbit o2"></div>
+          <div>
+            <svg class="mark" viewBox="0 0 200 200"><use href="#rbm-mark"/></svg>
+            <div class="mark-shadow"></div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-cue"><span>SCROLL</span><span class="track"></span><span>THE REEL KEEPS TURNING</span></div>
+    </div>
+  </section>
+
+  <!-- ============ FILM STRIP MARQUEE ============ -->
+  <div class="filmwrap">
+  <div class="filmstrip" aria-hidden="true">
+    <div class="holes"></div>
+    <div class="marquee"><div class="marquee-track" id="marqTrack"></div></div>
+    <div class="holes"></div>
+  </div>
+  </div>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="blk" id="services">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-idx">01</span><h2 class="sec">What we <span class="g">produce</span></h2></div>
+      <p class="sec-lede rv d1">Not one-off ads that fade in a week — a production line for your promotions.
+        AI gives us the speed and polish of a big-city studio; human direction keeps every video
+        true to your business, your town, and your customers.</p>
+      <div class="svc">
+        <article class="svc-row rv">
+          <span class="no">/01</span>
+          <h3>Promo Videos</h3>
+          <p>High-energy promotional videos for your products, services, menus, and offers —
+            produced for the feeds and screens your customers actually watch.</p>
+        </article>
+        <article class="svc-row rv">
+          <span class="no">/02</span>
+          <h3>Weekly Specials</h3>
+          <p>A fresh video every week, timed to your specials and your busiest days —
+            so the promotion hits while the offer is live, not after it ends.</p>
+        </article>
+        <article class="svc-row rv">
+          <span class="no">/03</span>
+          <h3>Seasonal Campaigns</h3>
+          <p>Holiday pushes, back-to-school, hunting season, lake season — campaign sets
+            planned around the calendar your customers already live by.</p>
+        </article>
+        <article class="svc-row rv">
+          <span class="no">/04</span>
+          <h3>Town Boost Promos</h3>
+          <p>Paired promotions that feature your business alongside the local attractions
+            that draw people here — two reasons to visit in a single video.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SALES-CYCLE JOURNEY ============ -->
+  <section class="blk" id="cycle">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-idx">02</span><h2 class="sec">Built on <span class="g">your sales cycle</span></h2></div>
+      <p class="sec-lede rv d1">Every business sells in rhythm. We map your promos to that rhythm —
+        then keep the reel turning, cycle after cycle.</p>
+      <div class="journey rv d1" id="journey">
+        <div class="j-line"><div class="j-fill"></div></div>
+        <div class="j-steps">
+          <div class="j-step">
+            <div class="j-dot">01</div>
+            <div>
+              <h3>The Pilot</h3>
+              <span class="freq">One-time · $149</span>
+              <p>One professionally produced promo video for your business. See the quality,
+                the style, and the process — with zero ongoing commitment.</p>
+            </div>
+          </div>
+          <div class="j-step">
+            <div class="j-dot">02</div>
+            <div>
+              <h3>Weekly Cycle</h3>
+              <span class="freq">Every week · $299/mo</span>
+              <p>Your specials, events, and offers promoted every single week — matched to
+                the days your customers decide where to spend.</p>
+            </div>
+          </div>
+          <div class="j-step">
+            <div class="j-dot">03</div>
+            <div>
+              <h3>Monthly Presence</h3>
+              <span class="freq">Every month · $199/mo</span>
+              <p>A steady monthly promo that keeps your business visible, current,
+                and top-of-mind between your bigger pushes.</p>
+            </div>
+          </div>
+          <div class="j-step">
+            <div class="j-dot">04</div>
+            <div>
+              <h3>Sales Cycle</h3>
+              <span class="freq">Full campaign · $499/mo</span>
+              <p>The complete program: weekly plus monthly plus seasonal campaign sets,
+                planned ahead around your peak selling seasons.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="blk" id="pricing">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-idx">03</span><h2 class="sec">Straightforward <span class="g">pricing</span></h2></div>
+      <p class="sec-lede rv d1">Every engagement starts with the Pilot. Pick a plan below to see it
+        in the starter email — no forms, no pressure, just a conversation.</p>
+
+      <div class="price-grid" role="radiogroup" aria-label="Choose a plan">
+        <article class="plan rv" tabindex="0" role="radio" aria-checked="false"
+                 data-plan="Pilot" data-price="$149 one-time">
+          <span class="pname">The Pilot</span>
+          <div class="amt"><b>$149</b><span>one-time</span></div>
+          <p class="pdesc">Your first promo video — the proof of concept every client starts with.</p>
+          <ul>
+            <li>1 professionally produced promo video</li>
+            <li>Built around your current offer</li>
+            <li>Human-directed, AI-produced</li>
+            <li>No ongoing commitment</li>
+          </ul>
+          <span class="pick">Select plan</span>
+        </article>
+
+        <article class="plan rv d1" tabindex="0" role="radio" aria-checked="false"
+                 data-plan="Monthly Presence" data-price="$199/mo">
+          <span class="pname">Monthly Presence</span>
+          <div class="amt"><b>$199</b><span>/ month</span></div>
+          <p class="pdesc">A steady monthly presence that keeps your business visible and current.</p>
+          <ul>
+            <li>1 new promo video every month</li>
+            <li>Aligned to your monthly offers</li>
+            <li>Consistent brand look &amp; sound</li>
+            <li>Planned ahead on a monthly cadence</li>
+          </ul>
+          <span class="pick">Select plan</span>
+        </article>
+
+        <article class="plan pop rv d2" tabindex="0" role="radio" aria-checked="true"
+                 data-plan="Weekly Cycle" data-price="$299/mo">
+          <span class="flag">MOST POPULAR</span>
+          <span class="pname">Weekly Cycle</span>
+          <div class="amt"><b>$299</b><span>/ month</span></div>
+          <p class="pdesc">A fresh promo every week, matched to your specials and your busiest days.</p>
+          <ul>
+            <li>New promo video every week</li>
+            <li>Timed to weekly specials &amp; events</li>
+            <li>Seasonal campaign moments included</li>
+            <li>Priority production slot</li>
+          </ul>
+          <span class="pick">Select plan</span>
+        </article>
+
+        <article class="plan rv d3" tabindex="0" role="radio" aria-checked="false"
+                 data-plan="Sales Cycle" data-price="$499/mo">
+          <span class="pname">Sales Cycle</span>
+          <div class="amt"><b>$499</b><span>/ month</span></div>
+          <p class="pdesc">The full program — your entire sales calendar, covered end to end.</p>
+          <ul>
+            <li>Weekly + monthly promos combined</li>
+            <li>Full seasonal campaign sets</li>
+            <li>Town Boost paired promos</li>
+            <li>Campaign planning ahead of peak seasons</li>
+          </ul>
+          <span class="pick">Select plan</span>
+        </article>
+      </div>
+
+      <div class="price-cta rv">
+        <p id="planSummary">Selected: <b>Weekly Cycle — $299/mo</b>. Start with the $149 Pilot, then roll straight into your cycle.</p>
+        <a class="btn btn-gold" id="planCta" style="margin-left:auto"
+           href="mailto:getreelboostmedia@gmail.com?subject=Reel%20Boost%20Media%20—%20Weekly%20Cycle%20(%24299%2Fmo)">Email us about this plan</a>
+      </div>
+      <p class="price-note">PILOT $149 ONE-TIME · CYCLE PLANS FROM $199/MO</p>
+    </div>
+  </section>
+
+  <!-- ============ TOWN BOOST ============ -->
+  <section class="blk" id="town">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-idx">04</span><h2 class="sec">Town <span class="g">Boost</span></h2></div>
+      <p class="sec-lede rv d1">Visitors come to your town for a reason. Town Boost pairs your
+        promotion with the places they're already coming to see — your business becomes part of the trip.</p>
+      <div class="town rv d1">
+        <h3>Your ad sells your business.<br /><span class="g">The town sells the trip.</span></h3>
+        <p>A Town Boost promo does both at once: your offer, featured alongside a local draw —
+          so a family planning a day at the lake also plans a stop at your counter, your table, your shop.</p>
+        <div class="town-cards">
+          <div class="town-card">
+            <span class="k">The pairing</span>
+            <h4>Local attractions + your business</h4>
+            <p>Area attractions bring thousands of visitors within minutes of local businesses.
+              A paired promo puts your offer inside that trip — eat, shop, and stay local.</p>
+          </div>
+          <div class="town-card">
+            <span class="k">The pattern</span>
+            <h4>"While you're in town…"</h4>
+            <p>Grab the pizza and take it to the park. Fuel up before the boat ramp.
+              Every Town Boost video gives visitors one more reason to stop — at your door.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="blk" id="faq">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-idx">05</span><h2 class="sec">Questions, <span class="g">answered</span></h2></div>
+      <div class="faq rv d1">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">What exactly is the $149 Pilot?<span class="x">+</span></button>
+          <div class="faq-a"><div>One complete, professionally produced promo video for your business —
+            built around an offer you choose. It's how every client starts: you see the quality and the
+            process first, then decide whether a monthly cycle makes sense. No contract, no obligation.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">What does "AI-powered, human-directed" mean?<span class="x">+</span></button>
+          <div class="faq-a"><div>We produce with leading-edge AI tools — that's what lets a local studio
+            deliver big-city polish at local prices, fast. But a human directs every video: your offer,
+            your brand, your town, and what your customers respond to. AI is the engine; direction is the craft.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">What do you need from me to make a video?<span class="x">+</span></button>
+          <div class="faq-a"><div>Your offer, your logo if you have one, and any photos of your business,
+            products, or food you'd like featured. From there we handle scripting, production, and delivery —
+            you approve the finished video before it goes anywhere.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Where do the videos run?<span class="x">+</span></button>
+          <div class="faq-a"><div>Wherever your customers are: your Facebook page, YouTube, your Google
+            business profile, in-store screens, and your website. We deliver files formatted for the
+            platforms you use — vertical for feeds and reels, wide for YouTube and screens.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">My business is seasonal — how does that fit?<span class="x">+</span></button>
+          <div class="faq-a"><div>That's exactly what the cycle model is built for. Campaigns are planned
+            around your peak seasons — lake season, holidays, hunting season, back-to-school — so your
+            heaviest promotion lands when your customers are buying. Tell us your calendar and we'll map the cycle to it.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Which businesses do you work with?<span class="x">+</span></button>
+          <div class="faq-a"><div>Local businesses of all kinds — restaurants, retail, services,
+            attractions, and events. If you sell to local customers, a cycle-based promo program fits.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINALE / CONTACT ============ -->
+  <section class="finale">
+    <div class="wrap">
+      <svg class="mark-mini" viewBox="0 0 200 200" aria-hidden="true"><use href="#rbm-mark"/></svg>
+      <h2>Put your business<br /><span class="g">in motion.</span></h2>
+      <p>Start with a single $149 Pilot video — see the quality and the style first,
+        then decide whether a weekly, monthly, or full sales-cycle program fits your business.</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="mailto:getreelboostmedia@gmail.com?subject=Reel%20Boost%20Media%20—%20Pilot%20%24149">getreelboostmedia@gmail.com</a>
+        <a class="btn btn-ghost" href="https://www.youtube.com/@ReelBoostMedia" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+      </div>
+      <footer>
+        <span class="f-brand">
+          <svg viewBox="0 0 200 200" aria-hidden="true"><use href="#rbm-mark"/></svg>
+          © 2026 Reel Boost Media
+        </span>
+        <a href="mailto:getreelboostmedia@gmail.com">getreelboostmedia@gmail.com</a>
+        <a href="https://www.youtube.com/@ReelBoostMedia" target="_blank" rel="noopener">youtube.com/@ReelBoostMedia</a>
+        <span>AI-POWERED. HUMAN-DIRECTED.</span>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- marquee content ---------- */
+  var phrase = '<span>AI-Powered Promos <b>///</b> <i>Weekly Cycles</i> <b>///</b> Seasonal Campaigns <b>///</b> <i>Town Boost</i> <b>///</b> </span>';
+  document.getElementById("marqTrack").innerHTML = phrase + phrase + phrase + phrase;
+
+  /* ---------- network canvas ---------- */
+  var cv = document.getElementById("net"), ctx = cv.getContext("2d");
+  var W = 0, H = 0, nodes = [], DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+  function resize(){
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * DPR; cv.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    var count = Math.max(34, Math.min(95, Math.floor(W * H / 21000)));
+    nodes = [];
+    for (var i = 0; i < count; i++){
+      nodes.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - .5) * .34, vy: (Math.random() - .5) * .34,
+        r: Math.random() * 1.9 + .7,
+        gold: Math.random() < .16,
+        ph: Math.random() * Math.PI * 2
+      });
+    }
+  }
+  function drawNet(t){
+    ctx.clearRect(0, 0, W, H);
+    var LINK = 150;
+    for (var i = 0; i < nodes.length; i++){
+      var a = nodes[i];
+      for (var j = i + 1; j < nodes.length; j++){
+        var b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+        if (d2 < LINK * LINK){
+          var al = (1 - Math.sqrt(d2) / LINK) * .34;
+          ctx.strokeStyle = (a.gold || b.gold)
+            ? "rgba(228,171,44," + al + ")"
+            : "rgba(1,169,56," + al + ")";
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+    }
+    for (var k = 0; k < nodes.length; k++){
+      var n = nodes[k];
+      var tw = .55 + .45 * Math.sin(t / 900 + n.ph);
+      ctx.fillStyle = n.gold
+        ? "rgba(255,217,104," + (0.55 * tw + .3) + ")"
+        : "rgba(47,230,115," + (0.5 * tw + .28) + ")";
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  var raf = null;
+  function step(t){
+    for (var i = 0; i < nodes.length; i++){
+      var n = nodes[i];
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < -20) n.x = W + 20; if (n.x > W + 20) n.x = -20;
+      if (n.y < -20) n.y = H + 20; if (n.y > H + 20) n.y = -20;
+    }
+    drawNet(t || 0);
+    raf = requestAnimationFrame(step);
+  }
+  resize();
+  if (reduced){ drawNet(1200); }
+  else {
+    raf = requestAnimationFrame(step);
+    document.addEventListener("visibilitychange", function(){
+      if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = null; }
+      else if (!raf){ raf = requestAnimationFrame(step); }
+    });
+  }
+  var rto;
+  window.addEventListener("resize", function(){
+    clearTimeout(rto);
+    rto = setTimeout(function(){ resize(); if (reduced) drawNet(1200); }, 160);
+  });
+
+  /* ---------- scroll: progress + parallax ---------- */
+  var prog = document.getElementById("progress");
+  var stage = document.getElementById("markStage");
+  var copy = document.getElementById("heroCopy");
+  var ticking = false;
+  function onScroll(){
+    var y = window.scrollY || 0;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (max > 0 ? (y / max) * 100 : 0) + "%";
+    if (!reduced && y < window.innerHeight * 1.2){
+      stage.style.transform = "translateY(" + (y * 0.14) + "px)";
+      copy.style.transform = "translateY(" + (y * 0.05) + "px)";
+    }
+    ticking = false;
+  }
+  window.addEventListener("scroll", function(){
+    if (!ticking){ ticking = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  onScroll();
+
+  /* ---------- reveal on scroll ---------- */
+  var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { threshold: .14 }) : null;
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (io && !reduced) io.observe(el); else el.classList.add("in");
+  });
+  /* Failsafe: never let scroll-state hide content (full-page captures,
+     print, or a stalled observer still show the whole page). */
+  setTimeout(function(){
+    document.querySelectorAll(".rv:not(.in)").forEach(function(el){ el.classList.add("in"); });
+    journey.classList.add("on");
+  }, 1400);
+
+  /* journey line triggers with its section */
+  var journey = document.getElementById("journey");
+  if (io && !reduced){
+    var jo = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting){ journey.classList.add("on"); jo.disconnect(); } });
+    }, { threshold: .35 });
+    jo.observe(journey);
+  } else { journey.classList.add("on"); }
+
+  /* ---------- pricing selection ---------- */
+  var plans = Array.prototype.slice.call(document.querySelectorAll(".plan"));
+  var summary = document.getElementById("planSummary");
+  var cta = document.getElementById("planCta");
+  function selectPlan(card){
+    plans.forEach(function(p){
+      var on = p === card;
+      p.classList.toggle("sel", on);
+      p.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    var name = card.getAttribute("data-plan"), price = card.getAttribute("data-price");
+    summary.innerHTML = "Selected: <b>" + name + " — " + price + "</b>. Start with the $149 Pilot, then roll straight into your cycle.";
+    cta.href = "mailto:getreelboostmedia@gmail.com?subject=" +
+      encodeURIComponent("Reel Boost Media — " + name + " (" + price + ")");
+    cta.textContent = "Email us about " + name;
+  }
+  plans.forEach(function(p){
+    p.addEventListener("click", function(){ selectPlan(p); });
+    p.addEventListener("keydown", function(ev){
+      if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); selectPlan(p); }
+    });
+  });
+  var initial = document.querySelector(".plan.pop");
+  if (initial) initial.classList.add("sel");
+
+  /* ---------- FAQ accordion ---------- */
+  document.querySelectorAll(".faq-item").forEach(function(item){
+    var q = item.querySelector(".faq-q"), a = item.querySelector(".faq-a");
+    q.addEventListener("click", function(){
+      var open = item.classList.toggle("open");
+      q.setAttribute("aria-expanded", open ? "true" : "false");
+      a.style.maxHeight = open ? a.scrollHeight + "px" : "0px";
+    });
+  });
+})();
+</script>
+</body>
+</html>
